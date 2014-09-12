@@ -20,3 +20,6 @@ class Comment(models.Model):
     def __unicode__(self):
         return self.text
         
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=25)
+    password = forms.CharField(widget=forms.PasswordInput)
