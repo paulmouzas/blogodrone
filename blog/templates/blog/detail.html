@@ -1,0 +1,9 @@
+{% extends "blog/base.html" %}}
+{% block content %}
+  <div class="blog-post">
+    <h2 class="blog-post-title">{{entry.title}}</h2>
+    <p class="blog-post-meta">{{ entry.pub_date }} <a href="#">{{entry.author.username}}</a></p>
+
+    <p>{{entry.post}}
+  </div><!-- /.blog-post -->
+{% endblock %}

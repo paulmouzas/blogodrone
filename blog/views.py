@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import RequestContext, loader
 from blog.models import Entry
 from django.contrib.auth import logout
@@ -13,5 +13,10 @@ def index(request):
     return HttpResponse(template.render(context))
     
 def detail(request, entry_id):
-    return HttpResponse("You're looking at blog post number %s." % entry_id)
+    try:
+        entry = Entry.objects.get(pk=entry_id)
+    except Entry.DoesNotExist:
+        raise Http404
+    return render(request, 'blog/detail.html', {'entry': entry})
+
     
