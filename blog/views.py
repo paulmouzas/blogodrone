@@ -23,18 +23,15 @@ def detail(request, entry_id):
     
 def login(request):
     if request.method == "POST":
+    
         form = LoginForm(request.POST)
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user = form.login(request)
+            if user:
                 auth_login(request, user)
                 return HttpResponseRedirect('/blog/')
-            else:
-                pass
-        else:
-            pass
     else:
         form = LoginForm()
         
