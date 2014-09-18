@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
-from blog.models import Entry, LoginForm, SignupForm
+from blog.models import Entry, LoginForm, SignupForm, PostForm
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 def index(request):
     latest_entry_list = Entry.objects.order_by('-pub_date')[:5]
@@ -23,7 +24,6 @@ def detail(request, entry_id):
     
 def login(request):
     if request.method == "POST":
-    
         form = LoginForm(request.POST)
         if form.is_valid():
             username = request.POST['username']
@@ -36,6 +36,20 @@ def login(request):
         form = LoginForm()
         
     return render(request, 'blog/login_form.html', {
+        'form': form
+    })
+    
+def new_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        title = request.POST['title']
+        post = request.POST['post']
+        p = Entry(author=request.user, title=title, post=post, pub_date=timezone.now())
+        p.save()
+    else:
+        form = PostForm
+        
+    return render(request, 'blog/new_post.html', {
         'form': form
     })
     

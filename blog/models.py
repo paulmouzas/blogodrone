@@ -2,6 +2,7 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+
 class Entry(models.Model):
     author = models.ForeignKey(User, blank=True)
     title = models.CharField(max_length=50)
@@ -43,3 +44,7 @@ class SignupForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
     
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Entry
+        fields = ['title', 'post']
