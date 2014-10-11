@@ -1,4 +1,4 @@
-{% extends "blog/base.html" %}}
+{% extends "blog/base.html" %}
 
 {% block content %}
 
@@ -6,7 +6,7 @@
     {% if latest_entry_list %}
     {% for entry in latest_entry_list %}
       <div class="blog-post">
-        <h2 class="blog-post-title"><a href="{{entry.id}}">{{entry.title}}</a></h2>
+	      <h2 class="blog-post-title"><a href="{% url 'detail' entry.id %}">{{entry.title}}</a></h2>
         <p class="blog-post-meta">{{ entry.pub_date }} <a href="#">{{entry.author.username}}</a></p>
 
         <p>{{entry.post}}

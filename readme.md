@@ -1,1 +1,3 @@
-Experimenting with Django.
+Creating a blogging application in Django. 
+
+A work in progress...

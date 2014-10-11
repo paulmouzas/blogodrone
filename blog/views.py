@@ -6,6 +6,7 @@ from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
 from django.utils import timezone
+import datetime
 
 def index(request):
     latest_entry_list = Entry.objects.order_by('-pub_date')[:5]
@@ -67,4 +68,10 @@ def signup(request):
         form = SignupForm()
     return render(request, 'blog/signup.html',{
         'form': form
+    })
+
+def month(request, year, month):
+    return render(request, 'blog/list_post_by_month.html', {
+        'year': year,
+        'month': month
     })
