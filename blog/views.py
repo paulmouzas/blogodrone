@@ -9,7 +9,9 @@ from django.utils import timezone
 import datetime
 
 def index(request):
-    latest_entry_list = Entry.objects.order_by('-pub_date')[:5]
+    # latest_entry_list = Entry.objects.order_by('-pub_date')[:5]
+    entries = Entry.objects.all().order_by('-pub_date')
+    latest_entry_list = entries[:5]
     template = loader.get_template('blog/index.html')
     context = RequestContext(request, {
         'latest_entry_list': latest_entry_list
@@ -71,7 +73,7 @@ def signup(request):
     })
 
 def month(request, year, month):
+    month_entry_list = Entry.objects.filter(pub_date__year=year, pub_date__month=month) 
     return render(request, 'blog/list_post_by_month.html', {
-        'year': year,
-        'month': month
+        'month_entry_list': month_entry_list
     })
