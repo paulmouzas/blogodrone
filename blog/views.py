@@ -8,13 +8,27 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime
 
+def filter_datetime_by_month(seq):
+    """ Takes in a list of datetime objects and returns list
+    of datetimes with no month that is the same """
+
+    seen = set()
+    unique_datetimes = []
+    for date in seq:
+        if (date.month, date.year) not in seen:
+            unique_datetimes.append(date)
+            seen.add((date.month, date.year))   
+    return unique_datetimes
+
 def index(request):
     # latest_entry_list = Entry.objects.order_by('-pub_date')[:5]
     entries = Entry.objects.all().order_by('-pub_date')
     latest_entry_list = entries[:5]
     template = loader.get_template('blog/index.html')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries])
     context = RequestContext(request, {
-        'latest_entry_list': latest_entry_list
+        'latest_entry_list': latest_entry_list,
+        'dates': dates
     })
     return HttpResponse(template.render(context))
     

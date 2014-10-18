@@ -40,7 +40,7 @@
 
   <div class="blog-header">
     <h1 class="blog-title">{% block title %}Blogodrone{% endblock %}</h1>
-    <p class="lead blog-description">The official example template of creating a blog with Bootstrap.</p>
+    <p class="lead blog-description">It's a blog.</p>
   </div>
 
   <div class="row">
@@ -58,18 +58,13 @@
       <div class="sidebar-module">
         <h4>Archives</h4>
         <ol class="list-unstyled">
-          <li><a href="#">March 2014</a></li>
-          <li><a href="#">February 2014</a></li>
-          <li><a href="#">January 2014</a></li>
-          <li><a href="#">December 2013</a></li>
-          <li><a href="#">November 2013</a></li>
-          <li><a href="#">October 2013</a></li>
-          <li><a href="#">September 2013</a></li>
-          <li><a href="#">August 2013</a></li>
-          <li><a href="#">July 2013</a></li>
-          <li><a href="#">June 2013</a></li>
-          <li><a href="#">May 2013</a></li>
-          <li><a href="#">April 2013</a></li>
+		{% if dates %}
+		{% for date in dates %}
+		<li><a href="{% url 'month' date.year date.month %}">{{ date|date:"M Y" }}</a></li>
+		{% endfor %}
+		{% else %}
+		<li>No blog posts yet!</li>
+		{% endif %}
         </ol>
       </div>
       <div class="sidebar-module">
