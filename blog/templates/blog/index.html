@@ -21,10 +21,10 @@
     
       <ul class="pager">
 	      {% if entries.has_previous %}
-	      <li><a href="?={{ entries.previous_page_number }}">Previous</a></li>
+	      <li><a href="?page={{ entries.previous_page_number }}">Previous</a></li>
 	      {% endif %}
 	      {% if entries.has_next %}
-	      <li><a href="?={{ entries.next_page_number }}">Next</a></li>
+	      <li><a href="?page={{ entries.next_page_number }}">Next</a></li>
 	      {% endif %}
       </ul>
 
