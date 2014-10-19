@@ -6,6 +6,7 @@ from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
 
 def filter_datetime_by_month(seq):
@@ -21,13 +22,20 @@ def filter_datetime_by_month(seq):
     return unique_datetimes
 
 def index(request):
-    # latest_entry_list = Entry.objects.order_by('-pub_date')[:5]
-    entries = Entry.objects.all().order_by('-pub_date')
-    latest_entry_list = entries[:5]
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    paginator = Paginator(entries_list, 5) # Show 5 entries per page
+    entries = request.GET.get('page')
+    try:
+        entries = paginator.page(entries) 
+    except PageNotAnInteger:
+        entries = paginator.page(1) 
+    except EmptyPage:
+        entries = paginator.page(paginator.num_pages)
+    #latest_entry_list = entries[:5]
     template = loader.get_template('blog/index.html')
-    dates = filter_datetime_by_month([entry.pub_date for entry in entries])
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     context = RequestContext(request, {
-        'latest_entry_list': latest_entry_list,
+        'entries': entries,
         'dates': dates
     })
     return HttpResponse(template.render(context))

@@ -3,8 +3,8 @@
 {% block content %}
 
     
-    {% if latest_entry_list %}
-    {% for entry in latest_entry_list %}
+    {% if entries %}
+    {% for entry in entries %}
       <div class="blog-post">
 	      <h2 class="blog-post-title"><a href="{% url 'detail' entry.id %}">{{entry.title}}</a></h2>
         <p class="blog-post-meta">{{ entry.pub_date }} <a href="#">{{entry.author.username}}</a></p>
@@ -20,8 +20,12 @@
     {% endif %}
     
       <ul class="pager">
-        <li><a href="#">Previous</a></li>
-        <li><a href="#">Next</a></li>
+	      {% if entries.has_previous %}
+	      <li><a href="?={{ entries.previous_page_number }}">Previous</a></li>
+	      {% endif %}
+	      {% if entries.has_next %}
+	      <li><a href="?={{ entries.next_page_number }}">Next</a></li>
+	      {% endif %}
       </ul>
 
 
