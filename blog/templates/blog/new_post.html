@@ -6,11 +6,9 @@
 
 <form role="form" action="{% url 'new_post' %}" method="post">
 {% csrf_token %}
-<div class="form-group"	
   {{form.title.label_tag}}{{form.title}}
   {{form.post.label_tag}}{{form.post}}
 <input type="submit" value="signup" />
-</table>
 </form>
 
 {% endblock %}
