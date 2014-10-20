@@ -27,11 +27,11 @@
         <nav class="blog-nav">
           <a class="blog-nav-item active" href="{% url 'index' %}">Home</a>
           {% if user.is_authenticated %}
-          <a class="blog-nav-item" href="logout">Log out</a>
+	  <a class="blog-nav-item" href="{% url 'logout' %}">Log out</a>
           <span id="welcome">Hi, {{user.username}}</span>
-          <a class="blog-nav-item" href="#">Add post</a>
+	  <a class="blog-nav-item" href="{% url 'new_post' %}">Add post</a>
           {% else %}
-          <a class="blog-nav-item" href="login">Log in</a>
+	  <a class="blog-nav-item" href="{% url 'login' %}">Log in</a>
           {% endif %}
         </nav>
       </div>
