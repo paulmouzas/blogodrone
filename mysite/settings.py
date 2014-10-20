@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bootstrap3',
     'blog',
-    'pipeline'
+    'pipeline',
+    'activelink'
 )
 
 MIDDLEWARE_CLASSES = (

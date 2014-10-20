@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     url(r'^(?P<year>\d{4})/(?P<month>\d{2})$', views.month, name='month'),
     url(r'^logout$', 'django.contrib.auth.views.logout', {'next_page': 'index'}, name='logout'),
     url(r'^login$', views.login, name='login'),
-    url(r'^signup$', views.signup),
+    url(r'^signup$', views.signup, name='signup'),
     url(r'^new_post$', views.new_post, name='new_post')
 )
