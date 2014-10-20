@@ -10,6 +10,11 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import django.conf.global_settings as DEFAULT_SETTINGS
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',
+)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -23,6 +28,7 @@ SECRET_KEY = 'jjd29d)x&(ja7xx1lc5y0-a8$ox&8b=l@sbxewb#r8&u6t=w0w'
 DEBUG = True
 
 TEMPLATE_DEBUG = True
+
 
 ALLOWED_HOSTS = []
 
