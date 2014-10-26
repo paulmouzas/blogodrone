@@ -1,3 +1,1 @@
-Creating a blogging application in Django. 
-
-A work in progress...
+Working on a Django-run blog
