@@ -45,7 +45,8 @@ INSTALLED_APPS = (
     'bootstrap3',
     'blog',
     'pipeline',
-    'activelink'
+    'activelink',
+    'autofixture'
 )
 
 MIDDLEWARE_CLASSES = (
