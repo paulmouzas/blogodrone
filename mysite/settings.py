@@ -44,7 +44,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'blog',
     'activelink',
-    'autofixture'
 )
 
 MIDDLEWARE_CLASSES = (
