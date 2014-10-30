@@ -6,3 +6,4 @@ venv
 *.swo
 *.swn
 settings.py
+venv

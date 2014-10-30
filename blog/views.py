@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
 from blog.models import Entry, LoginForm, SignupForm, PostForm
@@ -47,6 +47,7 @@ def detail(request, entry_id):
         raise Http404
     return render(request, 'blog/detail.html', {'entry': entry})
     
+    
 def login(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -71,6 +72,8 @@ def new_post(request):
         post = request.POST['post']
         p = Entry(author=request.user, title=title, post=post, pub_date=timezone.now())
         p.save()
+        entry_id = p.pk
+        return redirect('detail', entry_id=entry_id)
     else:
         form = PostForm
         

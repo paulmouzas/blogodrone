@@ -55,18 +55,18 @@
         <h4>About</h4>
         <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
       </div>
+      {% if dates %}
       <div class="sidebar-module">
         <h4>Archives</h4>
         <ol class="list-unstyled">
-		{% if dates %}
+		
 		{% for date in dates %}
 		<li><a href="{% url 'month' date.year date.month %}">{{ date|date:"M Y" }}</a></li>
 		{% endfor %}
-		{% else %}
-		<li>No blog posts yet!</li>
-		{% endif %}
+		
         </ol>
       </div>
+      {% endif %}
       <div class="sidebar-module">
         <h4>Elsewhere</h4>
         <ol class="list-unstyled">
