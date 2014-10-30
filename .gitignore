@@ -6,4 +6,3 @@ venv
 *.swo
 *.swn
 settings.py
-wsgi.py
