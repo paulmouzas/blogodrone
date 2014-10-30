@@ -104,7 +104,16 @@ def month(request, year, month):
     })
 
 def user_profile(request, username):
-       user = User.objects.get(username=username)
-       return render(request, 'blog/user_profile.html', {
+    instance = get_object_or_404(User.objects.get(username=username))
+
+    if request.method == "GET":
+        return render(request, 'blog/user_profile.html', {
            'user': user
-       })
+        })
+    elif request.method == "POST":
+        form = UserForm(request.POST or None, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile', instance.username)
+
+         

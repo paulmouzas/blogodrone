@@ -48,3 +48,8 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Entry
         fields = ['title', 'post']
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email', 'password']
