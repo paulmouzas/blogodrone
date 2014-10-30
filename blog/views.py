@@ -102,3 +102,9 @@ def month(request, year, month):
     return render(request, 'blog/list_post_by_month.html', {
         'month_entry_list': month_entry_list
     })
+
+def user_profile(request, username):
+       user = User.objects.get(username=username)
+       return render(request, 'blog/user_profile.html', {
+           'user': user
+       })
