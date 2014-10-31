@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
+
 class Entry(models.Model):
     author = models.ForeignKey(User, blank=True)
     title = models.CharField(max_length=50)

@@ -8,6 +8,15 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
+from django.utils.safestring import mark_safe
+from django.forms.util import ErrorList
+
+class DivErrorList(ErrorList):
+    def __unicode__(self):
+        return self.as_divs()
+    def as_divs(self):
+       if not self: return u''
+       return mark_safe(u'<div>%s</div>' % ''.join([u'<div class="alert alert-danger">%s</div>' % e for e in self]))
 
 def filter_datetime_by_month(seq):
     """ Takes in a list of datetime objects and returns list
@@ -50,7 +59,7 @@ def detail(request, entry_id):
     
 def login(request):
     if request.method == "POST":
-        form = LoginForm(request.POST)
+        form = LoginForm(request.POST, error_class=DivErrorList)
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
@@ -69,7 +78,7 @@ def new_post(request):
     if not request.user.is_authenticated():
         return redirect('login')
     if request.method == "POST":
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, error_class=DivErrorList)
         if form.is_valid():
             title = request.POST['title']
             post = request.POST['post']
@@ -86,7 +95,7 @@ def new_post(request):
     
 def signup(request):
     if request.method == "POST":
-        form = SignupForm(request.POST)
+        form = SignupForm(request.POST, error_class=DivErrorList)
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
