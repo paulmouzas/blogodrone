@@ -48,8 +48,17 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Entry
         fields = ['title', 'post']
+    title = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control'}))
+    post = forms.CharField(max_length=2000, required=True, widget=forms.Textarea(attrs={'class':'form-control'}))
+
+    def clean(self):
+        title = self.cleaned_data.get('title')
+        post = self.cleaned_data.get('post')
+        return self.cleaned_data
+
 
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email', 'password']
+        

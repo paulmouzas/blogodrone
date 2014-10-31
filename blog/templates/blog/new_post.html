@@ -4,16 +4,35 @@
 
 {% block content %}
 
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-error">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-error">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 <form role="form" action="{% url 'new_post' %}" method="post">
 
 {% csrf_token %}
+
+<form method="post" action="login">
+{% csrf_token %}
 <div class="form-group">
-  {{form.title.label_tag}}{{form.title}}
+    {{ form.title.label_tag }}
+    {{ form.title }}
 </div>
 <div class="form-group">
-  {{form.post.label_tag}}{{form.post}}
+    {{ form.post.label_tag }}
+    {{ form.post }}
 </div>
-<input class="btn bt-default" type="submit" value="signup" />
+<input class="btn bt-default" type="submit" value="Submit" />
 </form>
 
 {% endblock %}

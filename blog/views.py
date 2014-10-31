@@ -66,14 +66,17 @@ def login(request):
     })
     
 def new_post(request):
+    if not request.user.is_authenticated():
+        return redirect('login')
     if request.method == "POST":
         form = PostForm(request.POST)
-        title = request.POST['title']
-        post = request.POST['post']
-        p = Entry(author=request.user, title=title, post=post, pub_date=timezone.now())
-        p.save()
-        entry_id = p.pk
-        return redirect('detail', entry_id=entry_id)
+        if form.is_valid():
+            title = request.POST['title']
+            post = request.POST['post']
+            p = Entry(author=request.user, title=title, post=post, pub_date=timezone.now())
+            p.save()
+            entry_id = p.pk
+            return redirect('detail', entry_id=entry_id)
     else:
         form = PostForm
         
