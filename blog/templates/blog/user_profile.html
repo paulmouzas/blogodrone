@@ -1,7 +1,10 @@
 {% extends "blog/base.html" %}
+{% block title%}Profile for {{user.username}}{% endblock %}
 {% block content %}
+
 {% if user %}
-{{ user.username }
+<div>{{ user.username }}</div>
+<div>{{	user.email }}</div>
 
 {% endif %}
 {% endblock %}

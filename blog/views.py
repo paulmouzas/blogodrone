@@ -30,6 +30,7 @@ def filter_datetime_by_month(seq):
             seen.add((date.month, date.year))   
     return unique_datetimes
 
+
 def index(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
     paginator = Paginator(entries_list, 5) # Show 5 entries per page
@@ -50,14 +51,20 @@ def index(request):
     return HttpResponse(template.render(context))
     
 def detail(request, entry_id):
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     try:
         entry = Entry.objects.get(pk=entry_id)
     except Entry.DoesNotExist:
         raise Http404
-    return render(request, 'blog/detail.html', {'entry': entry})
+    return render(request, 'blog/detail.html', {'entry': entry,
+                                                'dates': dates,
+                                               })
     
     
 def login(request):
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     if request.method == "POST":
         form = LoginForm(request.POST, error_class=DivErrorList)
         if form.is_valid():
@@ -71,10 +78,13 @@ def login(request):
         form = LoginForm()
         
     return render(request, 'blog/login_form.html', {
-        'form': form
+        'form': form,
+        'dates': dates
     })
     
 def new_post(request):
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list]) 
     if not request.user.is_authenticated():
         return redirect('login')
     if request.method == "POST":
@@ -90,10 +100,13 @@ def new_post(request):
         form = PostForm
         
     return render(request, 'blog/new_post.html', {
-        'form': form
+        'form': form,
+        'dates': dates,
     })
     
 def signup(request):
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list]) 
     if request.method == "POST":
         form = SignupForm(request.POST, error_class=DivErrorList)
         username = request.POST['username']
@@ -106,21 +119,28 @@ def signup(request):
     else:
         form = SignupForm()
     return render(request, 'blog/signup.html',{
-        'form': form
+        'form': form,
+        'dates': dates,
     })
 
 def month(request, year, month):
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     month_entry_list = Entry.objects.filter(pub_date__year=year, pub_date__month=month) 
     return render(request, 'blog/list_post_by_month.html', {
-        'month_entry_list': month_entry_list
+        'month_entry_list': month_entry_list,
+        'dates': dates
     })
 
 def user_profile(request, username):
-    instance = get_object_or_404(User.objects.get(username=username))
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
+    instance = User.objects.get(username=username)
 
     if request.method == "GET":
         return render(request, 'blog/user_profile.html', {
-           'user': user
+           'user': instance,
+           'dates': dates,
         })
     elif request.method == "POST":
         form = UserForm(request.POST or None, instance=instance)
