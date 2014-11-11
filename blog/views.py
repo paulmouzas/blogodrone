@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
-from blog.models import Entry, LoginForm, SignupForm, PostForm
+from blog.models import Entry, LoginForm, SignupForm, PostForm, UpdateProfile
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
@@ -137,15 +137,26 @@ def user_profile(request, username):
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     instance = User.objects.get(username=username)
 
+    return render(request, 'blog/user_profile.html', {
+               'user': instance,
+               'dates': dates,
+             })
+def edit_user_profile(request, username):
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
+    instance = User.objects.get(username=username)
     if request.method == "GET":
-        return render(request, 'blog/user_profile.html', {
-           'user': instance,
-           'dates': dates,
-        })
+        form = UpdateProfile()
+        return render(request, 'blog/edit_profile.html', {
+                 'form': form,
+                 'user': instance,
+                 'dates': dates,
+              })
     elif request.method == "POST":
-        form = UserForm(request.POST or None, instance=instance)
+        form = UpdateProfile(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('user_profile', instance.username)
+            print 'great success'
+        
 
          
