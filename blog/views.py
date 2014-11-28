@@ -109,12 +109,12 @@ def signup(request):
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list]) 
     if request.method == "POST":
         form = SignupForm(request.POST, error_class=DivErrorList)
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.save()
-        print 'in signup'
+        if form.is_valid():
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST['password']
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.save()
         
     else:
         form = SignupForm()

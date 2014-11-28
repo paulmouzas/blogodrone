@@ -40,10 +40,21 @@ class LoginForm(forms.Form):
         user = authenticate(username=username, password=password)
         return user
     
-class SignupForm(forms.Form):
-    username = forms.CharField(max_length=25, widget=forms.TextInput(attrs={'class':'form-control'}))
+class SignupForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    username = forms.CharField(required=True, max_length=25, widget=forms.TextInput(attrs={'class':'form-control'}))
     email = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
+    password = forms.CharField(required=True,widget=forms.PasswordInput(attrs={'class':'form-control'}))
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+        return self.cleaned_data
     
 class PostForm(forms.ModelForm):
     class Meta:
