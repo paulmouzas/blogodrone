@@ -7,9 +7,11 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.exceptions import ObjectDoesNotExist
 import datetime
 from django.utils.safestring import mark_safe
 from django.forms.util import ErrorList
+
 
 class DivErrorList(ErrorList):
     def __unicode__(self):
@@ -126,7 +128,7 @@ def signup(request):
 def month(request, year, month):
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
-    month_entry_list = Entry.objects.filter(pub_date__year=year, pub_date__month=month) 
+    month_entry_list = Entry.objects.filter(pub_date__year=year, pub_date__month=month).order_by('-pub_date') 
     return render(request, 'blog/list_post_by_month.html', {
         'month_entry_list': month_entry_list,
         'dates': dates
@@ -135,13 +137,18 @@ def month(request, year, month):
 def user_profile(request, username):
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
-    instance = User.objects.get(username=username)
+    try:
+        instance = User.objects.get(username=username)
+    except ObjectDoesNotExist:
+        raise Http404 
 
     return render(request, 'blog/user_profile.html', {
                'user': instance,
                'dates': dates,
              })
 def edit_user_profile(request, username):
+    if not request.user.is_authenticated():
+        return redirect('login')
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     instance = User.objects.get(username=username)
@@ -154,6 +161,7 @@ def edit_user_profile(request, username):
               })
     elif request.method == "POST":
         form = UpdateProfile(request.POST, instance=request.user)
+        print request.user
         if form.is_valid():
             form.save()
             print 'great success'
