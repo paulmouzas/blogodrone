@@ -1,7 +1,7 @@
 {% extends "blog/base.html" %}
 {% block title%}Edit {{user.username}}'s information{% endblock %}
 {% block content %}
-<form role="form" action="{% url 'edit_user_profile' user.username %}" method="post">
+<form role="form" action="{% url 'edit_user_profile' %}" method="post">
 {% csrf_token %}
 {{ form.username.label_tag }}
 {{ form.username }}

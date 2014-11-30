@@ -65,6 +65,8 @@ def detail(request, entry_id):
     
     
 def login(request):
+    if request.user.is_authenticated():
+        return redirect('index')
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     if request.method == "POST":
@@ -146,25 +148,27 @@ def user_profile(request, username):
                'user': instance,
                'dates': dates,
              })
-def edit_user_profile(request, username):
-    if not request.user.is_authenticated():
+def edit_user_profile(request):
+    user = request.user
+    if not user.is_authenticated():
         return redirect('login')
+
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
-    instance = User.objects.get(username=username)
+
     if request.method == "GET":
         form = UpdateProfile()
         return render(request, 'blog/edit_profile.html', {
                  'form': form,
-                 'user': instance,
+                 'user': user,
                  'dates': dates,
               })
     elif request.method == "POST":
-        form = UpdateProfile(request.POST, instance=request.user)
-        print request.user
+        form = UpdateProfile(data=request.POST, instance=user)
         if form.is_valid():
             form.save()
-            print 'great success'
+            user.save()
+            return redirect('index')
         
 
          
