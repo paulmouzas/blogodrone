@@ -156,14 +156,9 @@ def edit_user_profile(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
 
-    if request.method == "GET":
-        form = UpdateProfile()
-        return render(request, 'blog/edit_profile.html', {
-                 'form': form,
-                 'user': user,
-                 'dates': dates,
-              })
-    elif request.method == "POST":
+
+
+    if request.method == "POST":
         form = UpdateProfile(data=request.POST, instance=user)
         if form.is_valid():
             form.save()
@@ -171,4 +166,9 @@ def edit_user_profile(request):
             return redirect('index')
         
 
-         
+    form = UpdateProfile()
+    return render(request, 'blog/edit_profile.html', {
+              'form': form,
+              'user': user,
+             'dates': dates,
+           })
