@@ -137,6 +137,7 @@ def month(request, year, month):
     })
 
 def user_profile(request, username):
+    user = request.user
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     try:
@@ -145,7 +146,8 @@ def user_profile(request, username):
         raise Http404 
 
     return render(request, 'blog/user_profile.html', {
-               'user': instance,
+               'view_user': instance,
+               'user': user,
                'dates': dates,
              })
 def edit_user_profile(request):

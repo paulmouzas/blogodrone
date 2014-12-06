@@ -26,9 +26,9 @@
 		<a class="blog-nav-item {% ifactive 'index' %}active{% endifactive %}" href="{% url 'index' %}">Home</a>
           {% if user.is_authenticated %}
 	  <a class="blog-nav-item" href="{% url 'logout' %}">Log out</a>
-          <span id="welcome">Hi, {{user.username}}</span>
 	  <a class="blog-nav-item {% ifactive 'new_post' %}active{% endifactive %}" href="{% url 'new_post' %}">Add post</a>
-          <a class="blog-nav-item {% ifactive 'edit_user_profile' %}active{% endifactive %}" href={% url 'edit_user_profile' %}>Edit your profile</a>
+          <a class="blog-nav-item {% ifactive 'user_profile' %}active{% endifactive %}" href={% url 'user_profile' user.username %}>View your profile</a>
+          <span id="welcome">Hi, {{user.username}}!</span>
           {% else %}
 	  <a class="blog-nav-item {% ifactive 'login' %}active{% endifactive %}" href="{% url 'login' %}">Log in</a>
           {% endif %}

@@ -3,8 +3,6 @@
 {% block content %}
 <form role="form" action="{% url 'edit_user_profile' %}" method="post">
 {% csrf_token %}
-{{ form.username.label_tag }}
-{{ form.username }}
 {{ form.email.label_tag }}
 {{ form.email }}
 <input class="btn bt-default" type="submit" value="Submit" />

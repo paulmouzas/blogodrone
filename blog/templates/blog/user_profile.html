@@ -2,9 +2,9 @@
 {% block title%}Profile for {{user.username}}{% endblock %}
 {% block content %}
 
-{% if user %}
-<div>{{ user.username }}</div>
-<div>{{	user.email }}</div>
+{% if view_user %}
+<div>{{ view_user.username }}</div>
+<div>{{	view_user.email }}</div>
 
 {% endif %}
 {% endblock %}
