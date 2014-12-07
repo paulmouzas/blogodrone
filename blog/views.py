@@ -161,14 +161,14 @@ def edit_user_profile(request):
 
 
     if request.method == "POST":
-        form = UpdateProfile(data=request.POST, instance=user)
+        form = UpdateProfile(data=request.POST, instance=user, error_class=DivErrorList)
         if form.is_valid():
             form.save()
             user.save()
             return redirect('index')
-        
+    else:
+        form = UpdateProfile()
 
-    form = UpdateProfile()
     return render(request, 'blog/edit_profile.html', {
               'form': form,
               'user': user,
