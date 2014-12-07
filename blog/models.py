@@ -68,6 +68,14 @@ class PostForm(forms.ModelForm):
         post = self.cleaned_data.get('post')
         return self.cleaned_data
 
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+    def clean(self):
+        text = self.cleaned_data.get('text')
+        return self.cleaned_data
+
 class UpdateProfile(forms.ModelForm):
     email = forms.EmailField(required=True)
 
