@@ -117,9 +117,11 @@ def signup(request):
             username = request.POST['username']
             email = request.POST['email']
             password = request.POST['password']
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-        
+            create_user = User.objects.create_user(username=username, email=email, password=password)
+            new_user = authenticate(username=request.POST['username'], password=request.POST['password'])
+            auth_login(request, new_user)
+            
+            return redirect('index')
     else:
         form = SignupForm()
     return render(request, 'blog/signup.html',{
