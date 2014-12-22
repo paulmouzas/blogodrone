@@ -8,5 +8,7 @@ urlpatterns = patterns('',
     url(r'^logout$', 'django.contrib.auth.views.logout', {'next_page': 'index'}, name='logout'),
     url(r'^login$', views.login, name='login'),
     url(r'^signup$', views.signup, name='signup'),
-    url(r'^new_post$', views.new_post, name='new_post')
+    url(r'^new_post$', views.new_post, name='new_post'),
+    url(r'^user/edit/$', views.edit_user_profile, name='edit_user_profile'),
+    url(r'^user/(?P<username>[a-z0-9_-]+)/$', views.user_profile, name='user_profile'),
 )

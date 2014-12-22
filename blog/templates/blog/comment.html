@@ -1,0 +1,21 @@
+{% extends "blog/base.html" %}
+
+{% block title%}New Comment{% endblock %}
+
+{% block content %}
+{{ form.non_field_errors }}
+<form role="form" action="{% url 'new_comment' %}" method="post">
+
+{% csrf_token %}
+
+<form method="post" action="comment">
+{% csrf_token %}
+<div class="form-group">
+    {{ form.comment.label_tag }}
+    {{ form.comment }}
+    {{ form.post.errors }}
+</div>
+<input class="btn bt-default" type="submit" value="Submit" />
+</form>
+
+{% endblock %}

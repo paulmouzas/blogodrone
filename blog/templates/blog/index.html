@@ -1,5 +1,6 @@
 {% extends "blog/base.html" %}
 
+
 {% block content %}
 
     
@@ -9,7 +10,8 @@
 	      <h2 class="blog-post-title"><a href="{% url 'detail' entry.id %}">{{entry.title}}</a></h2>
         <p class="blog-post-meta">{{ entry.pub_date }} <a href="#">{{entry.author.username}}</a></p>
 
-        <p>{{entry.post}}
+        <p>{{entry.post}}</p>
+        <a href="#">Make a comment</a>
       </div><!-- /.blog-post -->
       {% endfor %}
 

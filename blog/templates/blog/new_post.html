@@ -3,17 +3,24 @@
 {% block title%}New Post{% endblock %}
 
 {% block content %}
-
+{{ form.non_field_errors }}
 <form role="form" action="{% url 'new_post' %}" method="post">
 
 {% csrf_token %}
+
+<form method="post" action="login">
+{% csrf_token %}
 <div class="form-group">
-  {{form.title.label_tag}}{{form.title}}
+    {{ form.title.label_tag }}
+    {{ form.title }}
+    {{ form.title.errors}}
 </div>
 <div class="form-group">
-  {{form.post.label_tag}}{{form.post}}
+    {{ form.post.label_tag }}
+    {{ form.post }}
+    {{ form.post.errors }}
 </div>
-<input class="btn bt-default" type="submit" value="signup" />
+<input class="btn bt-default" type="submit" value="Submit" />
 </form>
 
 {% endblock %}

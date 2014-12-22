@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+{% block title%}Edit {{user.username}}'s information{% endblock %}
+{% block content %}
+{{ form.non_field_errors }}
+<form role="form" action="{% url 'edit_user_profile' %}" method="post">
+{% csrf_token %}
+{{ form.email.label_tag }}
+{{ form.email }}
+<input class="btn bt-default" type="submit" value="Submit" />
+</form>
+{% endblock %}
+
