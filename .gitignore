@@ -5,5 +5,4 @@ venv
 *.swp
 *.swo
 *.swn
-settings.py
 venv
