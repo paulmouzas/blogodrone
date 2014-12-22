@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
-from blog.models import Entry, LoginForm, SignupForm, PostForm, UpdateProfile
+from blog.models import Entry, LoginForm, SignupForm, PostForm, UpdateProfile, Comment, CommentForm
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
@@ -55,12 +55,16 @@ def index(request):
 def detail(request, entry_id):
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
+    form = CommentForm()
+
     try:
         entry = Entry.objects.get(pk=entry_id)
     except Entry.DoesNotExist:
         raise Http404
+    comments = Comment.objects.filter(entry=entry)
     return render(request, 'blog/detail.html', {'entry': entry,
                                                 'dates': dates,
+						'comments': comments
                                                })
     
     
