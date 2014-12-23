@@ -5,4 +5,5 @@ venv
 *.swp
 *.swo
 *.swn
-settings.py
+mysite/settings.py
+mysite/wsgi.py
