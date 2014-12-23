@@ -29,7 +29,7 @@ def filter_datetime_by_month(seq):
     for date in seq:
         if (date.month, date.year) not in seen:
             unique_datetimes.append(date)
-            seen.add((date.month, date.year))   
+            seen.add((date.month, date.year))
     return unique_datetimes
 
 
@@ -38,9 +38,9 @@ def index(request):
     paginator = Paginator(entries_list, 5) # Show 5 entries per page
     entries = request.GET.get('page')
     try:
-        entries = paginator.page(entries) 
+        entries = paginator.page(entries)
     except PageNotAnInteger:
-        entries = paginator.page(1) 
+        entries = paginator.page(1)
     except EmptyPage:
         entries = paginator.page(paginator.num_pages)
     #latest_entry_list = entries[:5]
@@ -51,11 +51,23 @@ def index(request):
         'dates': dates
     })
     return HttpResponse(template.render(context))
-    
+
 def detail(request, entry_id):
+    if request.method == "POST":
+        form = CommentForm(request.POST, error_class=DivErrorList)
+        if form.is_valid():
+            author = request.user
+            text = request.POST['text']
+            entry = entry = Entry.objects.get(pk=entry_id)
+            pub_date = timezone.now()
+            comment = Comment(author=author, entry=entry, text=text,
+                    pub_date=pub_date)
+            comment.save()
+
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     form = CommentForm()
+
 
     try:
         entry = Entry.objects.get(pk=entry_id)
@@ -64,10 +76,10 @@ def detail(request, entry_id):
     comments = Comment.objects.filter(entry=entry)
     return render(request, 'blog/detail.html', {'entry': entry,
                                                 'dates': dates,
-						'comments': comments
+						'comments': comments,
+                                                'form': form,
                                                })
-    
-    
+
 def login(request):
     if request.user.is_authenticated():
         return redirect('index')
@@ -84,12 +96,12 @@ def login(request):
                 return HttpResponseRedirect('/blog/')
     else:
         form = LoginForm()
-        
+
     return render(request, 'blog/login_form.html', {
         'form': form,
         'dates': dates
     })
-    
+
 def new_post(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list]) 
@@ -106,15 +118,15 @@ def new_post(request):
             return redirect('detail', entry_id=entry_id)
     else:
         form = PostForm
-        
+
     return render(request, 'blog/new_post.html', {
         'form': form,
         'dates': dates,
     })
-    
+
 def signup(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list]) 
+    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     if request.method == "POST":
         form = SignupForm(request.POST, error_class=DivErrorList)
         if form.is_valid():
@@ -124,7 +136,7 @@ def signup(request):
             create_user = User.objects.create_user(username=username, email=email, password=password)
             new_user = authenticate(username=request.POST['username'], password=request.POST['password'])
             auth_login(request, new_user)
-            
+
             return redirect('index')
     else:
         form = SignupForm()

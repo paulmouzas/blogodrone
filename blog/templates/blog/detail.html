@@ -8,8 +8,19 @@
   </div><!-- /.blog-post -->
   {% if comments %}
     {% for comment in comments %}
+      <p>{{ comment.author}} says:</p>
       <p>{{ comment.text }}</p>
+      <p>on: {{ comment.pub_date}}</p>
     {% endfor %}  
 
   {% endif %}
+  <form method="post" action="">
+  {% csrf_token %}
+  <div class="form-group">
+      {{ form.text.label_tag }}
+      {{ form.text }}
+      {{ form.text.errors }}
+  </div>
+  <input class="btn bt-default" type="submit" value="Submit" />
+  </form>
 {% endblock %}

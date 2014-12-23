@@ -13,20 +13,20 @@ class Entry(models.Model):
     
     def __unicode__(self):
         return self.title
-    
+
 class Comment(models.Model):
     author = models.ForeignKey(User, blank=True)
     entry = models.ForeignKey(Entry)
-    text = models.CharField(max_length=50)
+    text = models.TextField(max_length=2000)
     pub_date = models.DateTimeField('date published')
-    
+
     def __unicode__(self):
         return self.text
-        
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=25, required=True, widget=forms.TextInput(attrs={'class':'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}), required=True)
-    
+
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
@@ -34,13 +34,13 @@ class LoginForm(forms.Form):
         if not user or not user.is_active:
             raise forms.ValidationError("Sorry, that login was invalid. Please try again.")
         return self.cleaned_data
-        
+
     def login(self, request):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         user = authenticate(username=username, password=password)
         return user
-    
+
 class SignupForm(forms.ModelForm):
 
     class Meta:
@@ -62,7 +62,7 @@ class SignupForm(forms.ModelForm):
 #    class Meta:
 #        model = User
 #        fields = ['username', 'email', 'password']
-    
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Entry
@@ -79,6 +79,10 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
+
+    text = forms.CharField(max_length=2000, label="Comment", required=True, widget=forms.Textarea(attrs={'class':'form-control'}))
+
+
     def clean(self):
         text = self.cleaned_data.get('text')
         return self.cleaned_data
