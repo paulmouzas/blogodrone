@@ -23,6 +23,11 @@ class Comment(models.Model):
     def __unicode__(self):
         return self.text
 
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, unique=True)
+    about = models.TextField(max_length=2000)
+
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=25, required=True, widget=forms.TextInput(attrs={'class':'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}), required=True)
@@ -87,9 +92,8 @@ class CommentForm(forms.ModelForm):
         text = self.cleaned_data.get('text')
         return self.cleaned_data
 
-class UpdateProfile(forms.ModelForm):
+class UpdateEmailForm(forms.ModelForm):
     email = forms.EmailField(required=True)
-
 
     class Meta:
         model = User
@@ -102,3 +106,11 @@ class UpdateProfile(forms.ModelForm):
         except User.DoesNotExist:
             return self.cleaned_data
         raise forms.ValidationError("Sorry, that email already exists. Please try again.")
+
+
+class UpdateAboutForm(forms.ModelForm):
+    about = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = UserProfile
+        fields = ('about',)

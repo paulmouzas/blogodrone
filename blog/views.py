@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
-from blog.models import Entry, LoginForm, SignupForm, PostForm, UpdateProfile, Comment, CommentForm
+from blog.models import Entry, LoginForm, SignupForm, PostForm, Comment, CommentForm, UpdateEmailForm, UpdateAboutForm, UserProfile
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
@@ -155,19 +155,22 @@ def month(request, year, month):
     })
 
 def user_profile(request, username):
-    user = request.user
+
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     try:
         instance = User.objects.get(username=username)
+        user_profile = UserProfile.objects.get(user=instance)
     except ObjectDoesNotExist:
         raise Http404 
 
     return render(request, 'blog/user_profile.html', {
                'view_user': instance,
-               'user': user,
+               'user_profile': user_profile,
                'dates': dates,
              })
+
+
 def edit_user_profile(request):
     user = request.user
     if not user.is_authenticated():
@@ -176,19 +179,32 @@ def edit_user_profile(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
 
+    update_email_form = UpdateEmailForm()
+    update_about_form = UpdateAboutForm()
 
-
-    if request.method == "POST":
-        form = UpdateProfile(data=request.POST, instance=user, error_class=DivErrorList)
-        if form.is_valid():
-            form.save()
-            user.save()
-            return redirect('index')
-    else:
-        form = UpdateProfile()
 
     return render(request, 'blog/edit_profile.html', {
-              'form': form,
+              'update_email_form': update_email_form,
               'user': user,
              'dates': dates,
+             'update_about_form': update_about_form
            })
+
+
+def update_email(request):
+    user = request.user
+    if request.method == "POST":
+        update_email_form = UpdateEmailForm(data=request.POST, instance=user, error_class=DivErrorList)
+        if update_email_form.is_valid():
+            update_email_form.save()
+            user.save()
+            return redirect('edit_user_profile')
+
+def update_about(request):
+    user = request.user
+    if request.method == "POST":
+        update_about_form = UpdateAboutForm(data=request.POST, instance=user, error_class=DivErrorList)
+        if update_about_form.is_valid():
+            update_about_form.save()
+            user.save()
+            return redirect('edit_user_profile')

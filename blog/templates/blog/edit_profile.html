@@ -2,10 +2,16 @@
 {% block title%}Edit {{user.username}}'s information{% endblock %}
 {% block content %}
 {{ form.non_field_errors }}
-<form role="form" action="{% url 'edit_user_profile' %}" method="post">
+<form role="form" action="{% url 'update_email' %}" method="post">
 {% csrf_token %}
-{{ form.email.label_tag }}
-{{ form.email }}
+{{ update_email_form.email.label_tag }}
+{{ update_email_form.email }}
+<input class="btn bt-default" type="submit" value="Submit" />
+</form>
+<form role="form" action="{% url 'update_about' %}" method="post">
+{% csrf_token %}
+{{ update_about_form.about.label_tag }}
+{{ update_about_form.about }}
 <input class="btn bt-default" type="submit" value="Submit" />
 </form>
 {% endblock %}
