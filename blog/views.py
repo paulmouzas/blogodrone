@@ -160,9 +160,13 @@ def user_profile(request, username):
     dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])
     try:
         instance = User.objects.get(username=username)
-        user_profile = UserProfile.objects.get(user=instance)
     except ObjectDoesNotExist:
         raise Http404 
+
+    try:
+        user_profile = UserProfile.objects.get(user=instance)
+    except ObjectDoesNotExist:
+        user_profile = None
 
     return render(request, 'blog/user_profile.html', {
                'view_user': instance,
