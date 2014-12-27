@@ -36,6 +36,18 @@ def filter_datetime_by_month(seq):
     return unique_datetimes
 
 
+def get_dates():
+    seen = set()
+    unique_datetimes = []
+    entries_list = Entry.objects.all().order_by('-pub_date')
+    seq = [e.pub_date for e in entries_list]
+    for date in seq:
+        if (date.month, date.year) not in seen:
+            unique_datetimes.append(date)
+            seen.add((date.month, date.year))
+    return unique_datetimes
+
+
 def index(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
     paginator = Paginator(entries_list, 5)  # Show 5 entries per page
@@ -48,7 +60,7 @@ def index(request):
         entries = paginator.page(paginator.num_pages)
     # latest_entry_list = entries[:5]
     template = loader.get_template('blog/index.html')
-    dates = filter_datetime_by_month([entry.pub_date for entry in entries_list])  # NOQA
+    dates = get_dates()
     context = RequestContext(request, {
         'entries': entries,
         'dates': dates
@@ -70,8 +82,7 @@ def detail(request, entry_id):
                               pub_date=pub_date)
             comment.save()
 
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([e.pub_date for e in entries_list])
+    dates = get_dates()
     form = CommentForm()
 
     try:
@@ -88,8 +99,7 @@ def detail(request, entry_id):
 def login(request):
     if request.user.is_authenticated():
         return redirect('index')
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([e.pub_date for e in entries_list])
+    dates = get_dates()
     if request.method == "POST":
         form = LoginForm(request.POST, error_class=DivErrorList)
         if form.is_valid():
@@ -107,8 +117,7 @@ def login(request):
 
 
 def new_post(request):
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([e.pub_date for e in entries_list])
+    dates = get_dates()
     if not request.user.is_authenticated():
         return redirect('login')
     if request.method == "POST":
@@ -133,8 +142,7 @@ def new_post(request):
 
 
 def signup(request):
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([e.pub_date for e in entries_list])
+    dates = get_dates()
     if request.method == "POST":
         form = SignupForm(request.POST, error_class=DivErrorList)
 
@@ -158,8 +166,7 @@ def signup(request):
 
 
 def month(request, year, month):
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([e.pub_date for e in entries_list])
+    dates = get_dates()
     month_entry_list = Entry.objects.filter(pub_date__year=year,
                                             pub_date__month=month).order_by('-pub_date')  # NOQA
     return render(request, 'blog/list_post_by_month.html', {
@@ -170,8 +177,7 @@ def month(request, year, month):
 
 def user_profile(request, username):
 
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([e.pub_date for e in entries_list])
+    dates = get_dates()
 
     try:
         instance = User.objects.get(username=username)
@@ -194,8 +200,7 @@ def edit_user_profile(request):
     if not user.is_authenticated():
         return redirect('login')
 
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    dates = filter_datetime_by_month([e.pub_date for e in entries_list])
+    dates = get_dates()
 
     update_email_form = UpdateEmailForm()
     update_about_form = UpdateAboutForm()
