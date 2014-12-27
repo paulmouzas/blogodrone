@@ -23,19 +23,6 @@ class DivErrorList(ErrorList):
         return mark_safe(u'<div>%s</div>' % ''.join([u'<div class="alert alert-danger">%s</div>' % e for e in self]))  # NOQA
 
 
-def filter_datetime_by_month(seq):
-    """ Takes in a list of datetime objects and returns list
-    of datetimes with no month that is the same """
-
-    seen = set()
-    unique_datetimes = []
-    for date in seq:
-        if (date.month, date.year) not in seen:
-            unique_datetimes.append(date)
-            seen.add((date.month, date.year))
-    return unique_datetimes
-
-
 def get_dates():
     seen = set()
     unique_datetimes = []
