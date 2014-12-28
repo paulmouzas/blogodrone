@@ -213,11 +213,11 @@ def update_email(request):
 
 def update_about(request):
     user = request.user
+    user_profile = UserProfile.objects.get(user=user)
     if request.method == "POST":
         update_about_form = UpdateAboutForm(data=request.POST,
-                                            instance=user,
+                                            instance=user_profile,
                                             error_class=DivErrorList)
         if update_about_form.is_valid():
             update_about_form.save()
-            user.save()
             return redirect('edit_user_profile')

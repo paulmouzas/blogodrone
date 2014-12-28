@@ -97,7 +97,7 @@ class UpdateEmailForm(forms.ModelForm):
         except User.DoesNotExist:
             return self.cleaned_data
         raise forms.ValidationError("Sorry, that email already exists. \
-                                        Please try again.")
+                                     Please try again.")
 
 
 class UpdateAboutForm(forms.ModelForm):

@@ -5,7 +5,7 @@
 {% block content %}
 <span>Not a member? <a href="{% url 'signup' %}">Sign up!</a><span><br><br>
 {{ form.non_field_errors }}
-<form method="post" action="login">
+<form method="post" action="">
 {% csrf_token %}
 <div class="form-group">
     {{ form.username.label_tag }}
