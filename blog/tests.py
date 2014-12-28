@@ -40,12 +40,13 @@ class FormsTestCase(TestCase):
         c.post('/blog/signup/', {'username': 'user2',
                                  'email': 'user2@example.com',
                                  'password': 'foobar'})
-        c.post('/blog/user/update_about/', {'user': 'user2',
-                                            'about': 'about user2'})
+        c.login(username='user2', password='foobar')
+        c.post('/blog/user/update_about/', {'about': 'about user2'})
 
     def test_signup_form(self):
         self.assertTrue(User.objects.get(username='user2'))
 
     def test_about_form(self):
-        self.assertEqual(UserProfile.objects.get(username='user2').about,
+        user = User.objects.get(username='user2')
+        self.assertEqual(UserProfile.objects.get(user=user.id).about,
                          'about user2')

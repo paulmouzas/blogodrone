@@ -165,6 +165,7 @@ def month(request, year, month):
 def user_profile(request, username):
 
     dates = get_dates()
+    logged_in_user = request.user
 
     try:
         instance = User.objects.get(username=username)
@@ -179,6 +180,7 @@ def user_profile(request, username):
     return render(request, 'blog/user_profile.html', {
                            'view_user': instance,
                            'user_profile': user_profile,
+			   'logged_in_user': logged_in_user,
                            'dates': dates})
 
 
@@ -213,7 +215,10 @@ def update_email(request):
 
 def update_about(request):
     user = request.user
-    user_profile = UserProfile.objects.get(user=user)
+    try:
+        user_profile = UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
     if request.method == "POST":
         update_about_form = UpdateAboutForm(data=request.POST,
                                             instance=user_profile,
