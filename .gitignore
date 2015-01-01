@@ -6,5 +6,4 @@ venv
 *.swo
 *.swn
 mysite/local_settings.py
-mysite/wsgi.py
 env
