@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from blog import views
+from mysite import settings
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
@@ -14,3 +15,6 @@ urlpatterns = patterns('',
     url(r'^user/update_email/$', views.update_email, name='update_email'),
     url(r'^user/(?P<username>[a-z0-9_-]+)/$', views.user_profile, name='user_profile'),
 )
+urlpatterns += patterns('',
+        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+    )
