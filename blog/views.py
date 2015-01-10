@@ -189,10 +189,15 @@ def edit_user_profile(request):
     if not user.is_authenticated():
         return redirect('login')
 
+    try:
+        about = UserProfile.objects.get(user=user).about
+    except UserProfile.DoesNotExist:
+        about = UserProfile.objects.create(user=user)
+
     dates = get_dates()
 
     update_email_form = UpdateEmailForm()
-    update_about_form = UpdateAboutForm()
+    update_about_form = UpdateAboutForm(initial={'about': about})
 
     return render(request, 'blog/edit_profile.html', {
                            'update_email_form': update_email_form,
