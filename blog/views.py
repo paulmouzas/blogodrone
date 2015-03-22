@@ -46,13 +46,8 @@ def index(request):
     except EmptyPage:
         entries = paginator.page(paginator.num_pages)
     # latest_entry_list = entries[:5]
-    template = loader.get_template('blog/index.html')
     dates = get_dates()
-    context = RequestContext(request, {
-        'entries': entries,
-        'dates': dates
-    })
-    return HttpResponse(template.render(context))
+    return render(request, 'blog/index.html', {'entries': entries, 'dates': dates})
 
 
 def detail(request, entry_id):
