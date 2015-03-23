@@ -210,7 +210,7 @@ def update_email(request):
         if update_email_form.is_valid():
             update_email_form.save()
             user.save()
-            return redirect('edit_user_profile')
+            return redirect('user_profile', user_name=user.username)
 
 
 def update_about(request):
@@ -223,6 +223,5 @@ def update_about(request):
         update_about_form = UpdateAboutForm(data=request.POST,
                                             instance=user_profile,
                                             error_class=DivErrorList)
-        if update_about_form.is_valid():
-            update_about_form.save()
-            return redirect('edit_user_profile')
+        update_about_form.save()
+        return redirect(user_profile)

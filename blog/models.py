@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 
 class Entry(models.Model):
@@ -25,3 +26,6 @@ class Comment(models.Model):
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     about = models.TextField(max_length=2000)
+
+    def get_absolute_url(self):
+        return reverse('blog.views.user_profile', args=[str(self.user.username)])
