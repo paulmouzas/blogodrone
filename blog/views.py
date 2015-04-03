@@ -81,17 +81,17 @@ def detail(request, entry_id):
 def login(request):
     if request.user.is_authenticated():
         return redirect('index')
-    dates = get_dates()
+
     if request.method == "POST":
         form = LoginForm(request.POST, error_class=DivErrorList)
         if form.is_valid():
             user = form.login(request)
             if user:
                 auth_login(request, user)
-                return HttpResponseRedirect('/blog/')
+                return redirect('index')
     else:
         form = LoginForm()
-
+    dates = get_dates()
     return render(request, 'blog/login_form.html', {
         'form': form,
         'dates': dates
