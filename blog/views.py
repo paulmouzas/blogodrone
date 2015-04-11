@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.template import RequestContext, loader
 from blog.models import Entry, Comment, UserProfile
 from blog.forms import LoginForm, SignupForm, PostForm, CommentForm, UpdateEmailForm, UpdateAboutForm  # NOQA
 from django.contrib.auth import login as auth_login
