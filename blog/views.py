@@ -41,7 +41,7 @@ def detail(request, entry_id):
                               pub_date=pub_date)
             comment.save()
 
-    dates = get_dates()
+    dates = Entry.get_dates()
     form = CommentForm()
 
     try:
@@ -49,11 +49,9 @@ def detail(request, entry_id):
     except Entry.DoesNotExist:
         raise Http404
     comments = Comment.objects.filter(entry=entry)
-    return render(request, 'blog/detail.html', {'entry': entry,
-                                                'dates': dates,
-                                                'comments': comments,
-                                                'form': form})
-
+    context = {'entry': entry, 'dates': dates,
+               'comments': comments, 'form': form}
+    return render(request, 'blog/detail.html', context)
 
 def login(request):
     if request.user.is_authenticated():
@@ -100,7 +98,7 @@ def new_post(request):
 
 
 def signup(request):
-    dates = get_dates()
+    dates = Entry.get_dates()
     if request.method == "POST":
         form = SignupForm(request.POST, error_class=DivErrorList)
 
