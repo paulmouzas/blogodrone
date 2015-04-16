@@ -40,17 +40,6 @@ class SignupForm(forms.ModelForm):
     password = forms.CharField(required=True,
                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))  # NOQA
 
-    # def clean(self):
-    #     username = self.cleaned_data.get('username')
-    #     email = self.cleaned_data.get('email')
-    #     password = self.cleaned_data.get('password')
-    #     return self.cleaned_data
-
-# class SignupForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'password']
-
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -62,12 +51,6 @@ class PostForm(forms.ModelForm):
                            required=True,
                            widget=forms.Textarea(attrs={'class': 'form-control'}))  # NOQA
 
-#     def clean(self):
-#         title = self.cleaned_data.get('title')
-#         post = self.cleaned_data.get('post')
-#         return self.cleaned_data
-
-
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -77,11 +60,6 @@ class CommentForm(forms.ModelForm):
                            label="Comment",
                            required=True,
                            widget=forms.Textarea(attrs={'class': 'form-control'}))  # NOQA
-
-
-#     def clean(self):
-#         text = self.cleaned_data.get('text')
-#         return self.cleaned_data
 
 class UpdateEmailForm(forms.ModelForm):
     email = forms.EmailField(required=True)

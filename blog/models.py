@@ -9,6 +9,19 @@ class Entry(models.Model):
     post = models.TextField(max_length=2000)
     pub_date = models.DateTimeField('date published')
 
+    @classmethod
+    def get_dates(cls):
+        seen = set()
+        unique_datetimes = []
+        entries_list = cls.objects.all().order_by('-pub_date')
+        seq = [e.pub_date for e in entries_list]
+        for date in seq:
+            if (date.month, date.year) not in seen:
+                unique_datetimes.append(date)
+                seen.add((date.month, date.year))
+        return unique_datetimes
+
+
     def __unicode__(self):
         return self.title
 

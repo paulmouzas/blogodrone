@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import Http404
 from blog.models import Entry, Comment, UserProfile
 from blog.forms import LoginForm, SignupForm, PostForm, CommentForm, UpdateEmailForm, UpdateAboutForm  # NOQA
 from django.contrib.auth import login as auth_login
@@ -22,18 +22,6 @@ class DivErrorList(ErrorList):
         return mark_safe(u'<div>%s</div>' % ''.join([u'<div class="alert alert-danger">%s</div>' % e for e in self]))  # NOQA
 
 
-def get_dates():
-    seen = set()
-    unique_datetimes = []
-    entries_list = Entry.objects.all().order_by('-pub_date')
-    seq = [e.pub_date for e in entries_list]
-    for date in seq:
-        if (date.month, date.year) not in seen:
-            unique_datetimes.append(date)
-            seen.add((date.month, date.year))
-    return unique_datetimes
-
-
 def index(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
     paginator = Paginator(entries_list, 5)  # Show 5 entries per page
@@ -44,9 +32,10 @@ def index(request):
         entries = paginator.page(1)
     except EmptyPage:
         entries = paginator.page(paginator.num_pages)
-    # latest_entry_list = entries[:5]
-    dates = get_dates()
-    return render(request, 'blog/index.html', {'entries': entries, 'dates': dates})
+
+    dates = Entry.get_dates()
+    context = { 'dates': dates, 'entries': entries}
+    return render(request, 'blog/index.html', context)
 
 
 def detail(request, entry_id):
@@ -80,25 +69,24 @@ def detail(request, entry_id):
 def login(request):
     if request.user.is_authenticated():
         return redirect('index')
-    dates = get_dates()
+
     if request.method == "POST":
         form = LoginForm(request.POST, error_class=DivErrorList)
         if form.is_valid():
             user = form.login(request)
             if user:
                 auth_login(request, user)
-                return HttpResponseRedirect('/blog/')
+                return redirect('index')
     else:
         form = LoginForm()
 
-    return render(request, 'blog/login_form.html', {
-        'form': form,
-        'dates': dates
-    })
+    dates = Entry.get_dates()
+    context = {'dates': dates, 'form': form}
+
+    return render(request, 'blog/login_form.html', context)
 
 
 def new_post(request):
-    dates = get_dates()
     if not request.user.is_authenticated():
         return redirect('login')
     if request.method == "POST":
@@ -116,10 +104,10 @@ def new_post(request):
     else:
         form = PostForm
 
-    return render(request, 'blog/new_post.html', {
-        'form': form,
-        'dates': dates,
-    })
+    dates = Entry.get_dates()
+    context = {'dates': dates, 'form': form}
+
+    return render(request, 'blog/new_post.html', context)
 
 
 def signup(request):
@@ -158,7 +146,7 @@ def month(request, year, month):
 
 def user_profile(request, username):
 
-    dates = get_dates()
+    dates = Entry.get_dates()
     logged_in_user = request.user
 
     try:
@@ -171,11 +159,12 @@ def user_profile(request, username):
     except ObjectDoesNotExist:
         user_profile = None
 
-    return render(request, 'blog/user_profile.html', {
-                           'view_user': instance,
-                           'user_profile': user_profile,
-			   'logged_in_user': logged_in_user,
-                           'dates': dates})
+    context = {'view_user': instance,
+               'user_profile': user_profile,
+               'logged_in_user': logged_in_user,
+               'dates': dates}
+
+    return render(request, 'blog/user_profile.html', context)
 
 
 def edit_user_profile(request):
