@@ -1,26 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import Http404
 from blog.models import Entry, Comment, UserProfile
-from blog.forms import LoginForm, SignupForm, PostForm, CommentForm, UpdateEmailForm, UpdateAboutForm  # NOQA
+from .forms import (LoginForm, SignupForm, PostForm, CommentForm,
+        UpdateEmailForm, UpdateAboutForm)
+from .utils import DivErrorList
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.safestring import mark_safe
-from django.forms.util import ErrorList
-
-
-class DivErrorList(ErrorList):
-    def __unicode__(self):
-        return self.as_divs()
-
-    def as_divs(self):
-        if not self:
-            return u''
-        return mark_safe(u'<div>%s</div>' % ''.join([u'<div class="alert alert-danger">%s</div>' % e for e in self]))  # NOQA
-
 
 def index(request):
     entries_list = Entry.objects.all().order_by('-pub_date')
