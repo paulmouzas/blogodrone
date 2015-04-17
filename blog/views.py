@@ -164,7 +164,7 @@ def edit_user_profile(request):
     except UserProfile.DoesNotExist:
         about = UserProfile.objects.create(user=user)
 
-    dates = get_dates()
+    dates = Entry.get_dates()
 
     update_email_form = UpdateEmailForm()
     update_about_form = UpdateAboutForm(initial={'about': about})
@@ -177,15 +177,11 @@ def edit_user_profile(request):
 
 
 def update_email(request):
-    user = request.user
     if request.method == "POST":
-        update_email_form = UpdateEmailForm(data=request.POST,
-                                            instance=user,
-                                            error_class=DivErrorList)
+        update_email_form = UpdateEmailForm(request.POST, instance=request.user)
         if update_email_form.is_valid():
             update_email_form.save()
-            user.save()
-            return redirect('user_profile', user_name=user.username)
+            return redirect('edit_user_profile')
 
 
 def update_about(request):

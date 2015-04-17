@@ -68,15 +68,10 @@ class UpdateEmailForm(forms.ModelForm):
         model = User
         fields = ('email',)
 
-    def clean(self):
-        email = self.cleaned_data.get('email')
-        try:
-            User.objects.exclude(pk=self.instance.pk).get(email=email)
-        except User.DoesNotExist:
-            return self.cleaned_data
-        raise forms.ValidationError("Sorry, that email already exists. \
-                                     Please try again.")
-
+    def save(self):
+        user = User.objects.get(pk=self.instance.pk)
+        user.email = self.cleaned_data['email']
+        user.save()
 
 class UpdateAboutForm(forms.ModelForm):
     about = forms.CharField(required=True,

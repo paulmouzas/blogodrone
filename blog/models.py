@@ -37,7 +37,7 @@ class Comment(models.Model):
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    user = models.OneToOneField(User, unique=True)
     about = models.TextField(max_length=2000)
 
     def get_absolute_url(self):
